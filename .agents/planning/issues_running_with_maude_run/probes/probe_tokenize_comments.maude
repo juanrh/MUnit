@@ -1,0 +1,32 @@
+*** Probe: does `tokenize` strip `***` comments?
+***
+*** MUnit's `open` command reads a file, concatenates its lines, and calls
+***   metaParse(MUNIT-GRAMMAR, tokenize(D), '@MUnitModule@')
+*** See `parse-module` in io.maude.  If comments survive `tokenize`, the
+*** resulting QidList starts with `'***` and cannot parse as a munit block.
+***
+*** Run with maude_run, module TOKENIZE-PROBE:
+***   reduce tokenize(plain) .
+***   reduce tokenize(commented) .
+***
+*** Observed with Maude 3.5.1:
+***   reduce tokenize(plain) .
+***   result QidList: 'munit 'X 'is 'assertTrue '`( 'true '`) 'endu
+***
+***   reduce tokenize(commented) .
+***   result QidList: '*** 'a 'comment 'munit 'X 'is 'assertTrue '`( 'true '`) 'endu
+***
+*** So comments are NOT stripped: they become Qids like '*** and 'a.
+*** Consequence: a file opened by MUnit must not contain comments
+*** That is why examples/reverse_list_test.maude is comment-free.
+
+fmod TOKENIZE-PROBE is
+  pr META-LEVEL .
+  pr LEXICAL .
+
+  op plain : -> String .
+  eq plain = "munit X is assertTrue(true) endu" .
+
+  op commented : -> String .
+  eq commented = "*** a comment\nmunit X is assertTrue(true) endu" .
+endfm

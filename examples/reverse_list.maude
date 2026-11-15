@@ -1,0 +1,35 @@
+*** Reverse of a list of integers.
+***
+*** A list is either nil or an integer consed onto a list.  The cons
+*** operator is declared associative with identity nil, so
+***
+***     1 : 2 : 3  ==  1 : (2 : (3 : nil))
+***
+*** are the same term.  Reverse is computed with an accumulator, which
+*** visits each element once instead of appending at every step.
+***
+***     Maude> reduce reverse(1 : 2 : 3) .
+***     result IntList: 3 : 2 : 1
+***
+***     Maude> reduce reverse(reverse(4 : 5 : 6)) .
+***     result IntList: 4 : 5 : 6
+
+fmod INT-LIST is
+  pr INT .
+
+  sort IntList .
+  subsort Int < IntList .
+
+  op nil : -> IntList [ctor] .
+  op _:_ : IntList IntList -> IntList [ctor assoc id: nil] .
+
+  op reverse : IntList -> IntList .
+  op reverseAux : IntList IntList -> IntList .
+
+  var E : Int .
+  vars L A : IntList .
+
+  eq reverse(L) = reverseAux(L, nil) .
+  eq reverseAux(nil, A) = A .
+  eq reverseAux(E : L, A) = reverseAux(L, E : A) .
+endfm

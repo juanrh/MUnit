@@ -1,0 +1,23 @@
+*** Probe: `***` immediately followed by `(` starts a MULTILINE block comment.
+***
+*** Maude manual, Appendix B.3: comments are `***` or `---` to end of line,
+*** and `***( ... )` is a multiline comment delimited by balanced parentheses.
+*** Whitespace between `***` and `(` is accepted, so a line comment whose
+*** first non-space character is `(` unexpectedly becomes a block comment that
+*** ends at the matching `)`.
+***
+*** Consequence: in the line below the comment ends at the `)`, so `w1` is
+*** tokenized and Maude reports "skipped unexpected token: w1".
+*** (a) w1
+fmod BLOCK-COMMENT-BAD is
+  sort S .
+  op a : -> S .
+endfm
+
+*** A `(` later in the line does not start a block comment, because `foo`
+*** comes first, so this whole line is an ordinary line comment.
+*** foo (b) w2
+fmod BLOCK-COMMENT-GOOD is
+  sort S .
+  op a : -> S .
+endfm

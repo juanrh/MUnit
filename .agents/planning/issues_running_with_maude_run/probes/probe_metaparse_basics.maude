@@ -1,0 +1,34 @@
+*** Probe: metaParse basics in Maude 3.5.1, to contrast with the MUnit grammar.
+***
+*** Run with maude_run, module METAPARSE-PROBE:
+***   reduce metaParse(upModule('TINY-GRAMMAR, false), tokenize("a b"), 'List) .
+***   reduce metaParse(upModule('INT-LIST, true), tokenize("reverse(1 : 2 : 3)"), 'IntList) .
+***   reduce metaParse(upModule('INT-LIST, true), tokenize("reverse(1 : 2 : 3)"), anyType) .
+***   reduce metaParse(upModule('INT-LIST, true), nil, tokenize("reverse(1 : 2 : 3)"), 'IntList) .
+***   reduce metaParse(upModule('INT-LIST, true), anyType, tokenize("reverse(1 : 2 : 3)"), 'IntList) .
+***
+*** Observed:
+***   1. Tiny assoc-list grammar parses:
+***        {'__['a.Elem, 'b.Elem], 'List}
+***   2. Ordinary module parses with the documented 3-argument form:
+***        {'reverse['_:_[...]], 'IntList}
+***   3. `anyType` works as the third argument.
+***   4. The 3-argument form lowers to a 4-argument special op with `none`
+***      inserted as the second argument (see `getOps(upModule('META-LEVEL, false))`).
+***      Passing `nil` or `anyType` in that second slot leaves the term stuck,
+***      so a 4-argument call is easy to get wrong.
+
+load ../../../../examples/reverse_list.maude
+
+fmod TINY-GRAMMAR is
+  sorts Elem List Top .
+  subsorts Elem < List .
+  ops a b : -> Elem .
+  op __ : List List -> List [ctor assoc] .
+  op wrap : List -> Top .
+endfm
+
+fmod METAPARSE-PROBE is
+  pr META-LEVEL .
+  pr LEXICAL .
+endfm

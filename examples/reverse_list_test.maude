@@ -1,0 +1,15 @@
+munit INT-LIST is
+  assertEqual(reverse(nil), nil)
+  assertEqual(reverse(7), 7)
+  assertEqual(reverse(9 : nil), 9)
+  assertEqual(reverse(1 : 2), 2 : 1)
+  assertEqual(reverse(1 : 2 : 3), 3 : 2 : 1)
+  assertEqual(reverse(0 : -3 : 8), 8 : -3 : 0)
+  assertEqual(reverse(-1 : 0 : 42 : -7), -7 : 42 : 0 : -1)
+  assertEqual(reverse(5 : 5 : 5), 5 : 5 : 5)
+  assertDifferent(reverse(1 : 2 : 3), 1 : 2 : 3)
+  assertDifferent(reverse(1 : 2 : 3), 2 : 3 : 1)
+  assertEqual(reverse(reverse(4 : 5 : 6)), 4 : 5 : 6)
+  assertSort(reverse(nil), IntList)
+  assertSort(reverse(1 : 2 : 3), IntList)
+endu
